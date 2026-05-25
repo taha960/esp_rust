@@ -1,0 +1,40 @@
+[package]
+edition      = "2021"
+name         = "blik_intr_count"
+rust-version = "1.88"
+version      = "0.1.0"
+
+[[bin]]
+name = "blik_intr_count"
+path = "./src/bin/main.rs"
+
+[dependencies]
+esp-hal = { version = "~1.0", features = ["defmt", "esp32s3", "unstable"] }
+
+embedded-hal = "1.0"
+
+defmt                  = "1.0.1"
+esp-bootloader-esp-idf = { version = "0.4.0", features = ["defmt", "esp32s3"] }
+
+critical-section = "1.2.0"
+esp-backtrace = { version = "0.19.0", features = [
+  "defmt",
+  "esp32s3",
+  "panic-handler",
+] }
+esp-println = { version = "0.17.0", features = ["defmt-espflash", "esp32s3"] }
+esp-hal-smartled = "0.17.0"
+smart-leds = "0.4.0"
+
+
+# For fine tuning these settings, please refer to https://doc.rust-lang.org/cargo/reference/profiles.html
+[profile.dev]
+# The default debug profile is too slow and too big for resource-constrained devices.
+# Always build with some optimizations enabled.
+opt-level = "s"
+
+[profile.release]
+codegen-units = 1     # LLVM can perform better optimizations using a single thread
+debug         = 2     # prefer slower builds but better debugging experience
+lto           = 'fat'
+opt-level     = 's'
